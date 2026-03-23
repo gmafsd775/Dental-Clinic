@@ -19,24 +19,27 @@ export default function AppointmentForm() {
     console.log('Attempting transmission to:', WEBHOOK_URL);
 
     try {
-      // mode: 'no-cors' is used to bypass browser CORS blocks.
-      // It sends the data to n8n but the browser won't let us read the response.
-      // This is the most reliable way to send data to a private server from GitHub Pages.
-      await fetch(WEBHOOK_URL, {
+      // We try to send the data. 
+      // If n8n is not active, the production URL will return 404.
+      // With no-cors, we can't see the 404, but the network request itself should succeed.
+      const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
-        mode: 'no-cors',
+        mode: 'no-cors', // Bypasses CORS pre-flight
         headers: {
           'Content-Type': 'text/plain',
         },
         body: JSON.stringify(formData),
       });
 
-      // Since we use no-cors, we assume success if no network error occurred.
-      console.log('Transmission sent successfully.');
+      // In no-cors mode, type is 'opaque', status is 0.
+      console.log('Fetch completed. Response type:', response.type);
+      
+      // We assume success because no-cors doesn't throw on 404/500
       setStatus('success');
       setFormData({ name: '', gmail: '', phone: '' });
+      
     } catch (error) {
-      console.error('Transmission Error:', error);
+      console.error('Network Error:', error);
       setStatus('error');
     }
   };
