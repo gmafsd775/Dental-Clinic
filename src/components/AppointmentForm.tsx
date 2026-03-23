@@ -10,6 +10,7 @@ export default function AppointmentForm() {
     phone: '',
   });
 
+  // Version 2.1 - Production Endpoint with CORS Bypass
   const WEBHOOK_URL = 'https://vmi2915475.contaboserver.net/webhook/dental';
 
   const handleSubmit = async (e: FormEvent) => {
