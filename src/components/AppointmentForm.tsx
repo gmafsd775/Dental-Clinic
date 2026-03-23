@@ -10,7 +10,7 @@ export default function AppointmentForm() {
     phone: '',
   });
 
-  const WEBHOOK_URL = 'https://vmi2915475.contaboserver.net/webhook/c0594e6a-2a4a-4818-9d4f-72ca0f3f5732';
+  const WEBHOOK_URL = 'https://vmi2915475.contaboserver.net/webhook/dental';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
