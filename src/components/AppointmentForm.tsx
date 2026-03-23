@@ -19,26 +19,27 @@ export default function AppointmentForm() {
     console.log('Attempting to send data to n8n:', formData);
 
     try {
-      // POST is the correct method for n8n webhooks receiving JSON data
+      // Using text/plain is a common trick to bypass CORS "pre-flight" checks
+      // n8n will still be able to parse this as JSON
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log('n8n received the data successfully!');
+        console.log('Transmission successful!');
         setStatus('success');
         setFormData({ name: '', gmail: '', phone: '' });
       } else {
         const errorText = await response.text();
-        console.error('n8n returned an error:', response.status, errorText);
-        throw new Error(`Server error: ${response.status}`);
+        console.error('Transmission failed with status:', response.status, errorText);
+        throw new Error(`Status: ${response.status}`);
       }
     } catch (error) {
-      console.error('Connection failed. This is likely a CORS issue or the n8n test node is not active:', error);
+      console.error('Transmission Error:', error);
       setStatus('error');
     }
   };
